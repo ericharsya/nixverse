@@ -1,0 +1,5 @@
+0000000000000000000000000000000000000000 1cedc1fd891c379805e615b440fd2cf2dd1b8def Ericsson Budhilaw <budhilaw@Ericssons-MacBook-Air.local> 1732904092 +0700	clone: from https://github.com/budhilaw/nixpkgs.git
+1cedc1fd891c379805e615b440fd2cf2dd1b8def 9d678dd63e0b959e89e76afdc98018d7b69597af Ericsson Budhilaw <ericsson.budhilaw@gmail.com> 1733893782 +0700	commit: chore(): add some changes
+9d678dd63e0b959e89e76afdc98018d7b69597af c3014a72d0bbecc6233ed3fab288e2354af8ab97 Ericsson Budhilaw <ericsson.budhilaw@gmail.com> 1734310611 +0700	commit: chore(): update to 24.11
+c3014a72d0bbecc6233ed3fab288e2354af8ab97 dfe4337eb22dd9862a04c73ac6eb151aafb1c831 Ericsson Budhilaw <ericsson.budhilaw@gmail.com> 1734311814 +0700	commit: chore(): remove nix.settings.auto-optimise-store because is known to corrupt the nix store
+dfe4337eb22dd9862a04c73ac6eb151aafb1c831 dd957a1bcbd6241b5733ad6ffed1bac1cd18f1b9 Ericsson Budhilaw <ericsson.budhilaw@gmail.com> 1734312223 +0700	commit: chore(): add github access token
