@@ -36,6 +36,7 @@ in
   homebrew.masApps = {
     Slack = 803453959;
     WhatsApp = 310633997;
+    Wireguard = 1451685025;
   };
 
   homebrew.casks = [
@@ -72,11 +73,9 @@ in
     ##############
     # Tech
     ##############
-    "iterm2"
+    "cursor"
     "jetbrains-toolbox"
     "pritunl"
-    "visual-studio-code"
-    "postman"
     "orbstack"
     "obsidian"
     "dbeaver-community"
@@ -84,34 +83,18 @@ in
     ##############
     # Productivity
     ##############
-    # "macfuse"
-    # "mounty"
-    
     "logi-options+"
     "brave-browser"
-    "arc"
-    "raycast"
-    "hiddenbar"
-    "appcleaner"
     "obs"
-    "telegram"
-    "shottr"
     "notion"
-    "rectangle"
     "discord"
-    "zoom"
-    
-    ##############
-    # Study
-    ##############
-    "publish-or-perish"
-    "calibre"
 
     ##############
     # Misc
     ##############
     "1password"
     "1password-cli"
+    
     "cloudflare-warp"
     "iina"
   ];
@@ -120,9 +103,6 @@ in
     ##############
     # Productivity
     ##############
-    # "ntfs-3g-mac"
-    "git"
-    "pinentry-mac"
     "terminal-notifier"
   ];
 

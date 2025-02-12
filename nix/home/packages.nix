@@ -36,7 +36,6 @@ in
       ################################## 
       # Productivity
       ##################################
-      # neofetch # fancy fetch information
       lsd
       htop
       tldr
@@ -46,22 +45,21 @@ in
       curl
       eza
       fastfetch
+      zoom-us
 
       ################################## 
       # Development
       ##################################
       pkg-config
       sops
-      mkcert
-      docker
       kubectl
       (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
+      postman
+      vscode
 
       ################################## 
       # Programming Stuff
       ##################################
-      mysql84
-      python3
       go-mockery
       go-migrate
       docker
@@ -71,6 +69,7 @@ in
       ################################## 
       starship # theme for shell (bash,fish,zsh)
       tmux
+      iterm2
 
       ################################## 
       # Misc
@@ -78,16 +77,25 @@ in
       gnupg
       openssl
       ffmpeg
+      telegram
+      git
 
       ################################## 
       # Useful Nix related tools
       ################################## 
       cachix
+    
     ] ++ lib.optionals
       stdenv.isDarwin
       [
         mas
         m-cli # useful macOS CLI commands
         xcode-install
+        rectangle
+        raycast
+        hidden-bar
+        appcleaner
+        shottr
+        pinentry_mac
       ];
 }

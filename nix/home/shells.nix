@@ -224,14 +224,20 @@ in
         set fish_greeting
 
         # Golang
-        set -gx GOPATH $HOME/Tools/Go
+        set -gx GOPATH $HOME/Dev/Tools/Go
         fish_add_path $GOPATH/bin
+
+        # Rust
+        fish_add_path $HOME/.cargo/bin
 
         # Jetbrains
         fish_add_path /${if pkgs.stdenv.isDarwin then "Users" else "home"}/${config.home.username}/Library/Application\ Support/JetBrains/Toolbox/scripts
 
         # brew bin
         fish_add_path /opt/homebrew/bin
+
+        # orbstack
+        fish_add_path $HOME/.orbstack/bin
 
         # gcloud
         fish_add_path /${if pkgs.stdenv.isDarwin then "Users" else "home"}/${config.home.username}/Dev/Tech/google-cloud-sdk/bin
