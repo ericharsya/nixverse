@@ -77,8 +77,8 @@ in
     "jetbrains-toolbox"
     "pritunl"
     "orbstack"
-    "obsidian"
     "dbeaver-community"
+    "mongodb-compass"
 
     ##############
     # Productivity
@@ -86,8 +86,11 @@ in
     "logi-options+"
     "brave-browser"
     "obs"
-    "notion"
+    # "notion"
+    # "obsidian"
+    "siyuan"
     "discord"
+    "mendeley-reference-manager"
 
     ##############
     # Misc

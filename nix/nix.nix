@@ -11,7 +11,7 @@ in
 {
   inherit nixPath;
 
-  configureBuildUsers = true;
+  # configureBuildUsers = true;
 
   registry = {
     system.flake = inputs.self;

@@ -55,7 +55,7 @@ in
       kubectl
       (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
       postman
-      vscode
+      # vscode
 
       ################################## 
       # Programming Stuff
@@ -63,6 +63,8 @@ in
       go-mockery
       go-migrate
       docker
+      cloudflared
+      mkcert
 
       ################################## 
       # Shell Integrations
