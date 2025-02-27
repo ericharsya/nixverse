@@ -43,6 +43,23 @@
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
+    ## -- nix-homebrew
+    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
+    
+    # Homebrew taps (optional, for declarative management)
+    homebrew-core = {
+      url = "github:homebrew/homebrew-core";
+      flake = false;
+    };
+    homebrew-cask = {
+      url = "github:homebrew/homebrew-cask";
+      flake = false;
+    };
+    homebrew-bundle = {
+      url = "github:homebrew/homebrew-bundle";
+      flake = false;
+    };
+
     iamb.url = "github:ulyssa/iamb";
     iamb.inputs.nixpkgs.follows = "nixpkgs";
 

@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }:
 
@@ -10,24 +11,53 @@ let
   brewEnabled = config.homebrew.enable;
 in
 {
-  environment.shellInit =
-    mkIf brewEnabled # bash
-      ''
-        eval "$(${config.homebrew.brewPrefix}/brew shellenv)"
-      '';
+  # Import nix-homebrew module
+  imports = [
+    inputs.nix-homebrew.darwinModules.nix-homebrew
+  ];
 
-  system.activationScripts.preUserActivation.text =
-    mkIf brewEnabled # bash
-      ''
-        if [ ! -f ${config.homebrew.brewPrefix}/brew ]; then
-          ${pkgs.bash}/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-        fi
-      '';
+  # Remove the old activation script and shellInit since nix-homebrew will handle this
+  # environment.shellInit = mkIf brewEnabled # bash
+  #    ''
+  #      eval "$(${config.homebrew.brewPrefix}/brew shellenv)"
+  #    '';
 
+  # system.activationScripts.preUserActivation.text =
+  #  mkIf brewEnabled # bash
+  #    ''
+  #      if [ ! -f ${config.homebrew.brewPrefix}/brew ]; then
+  #        ${pkgs.bash}/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  #      fi
+  #    '';
+
+  # Enable both homebrew and nix-homebrew
   homebrew.enable = true;
+  nix-homebrew = {
+    enable = true;
+    user = "budhilaw"; # your username
+    
+    # Optional: Enable declarative tap management
+    enableRosetta = true; # Enable if you want to use x86_64 homebrew packages on Apple Silicon (e.g., M1/M2 Mac)
+    
+    # Enable auto-migration to preserve installed packages while migrating to nix-homebrew
+    autoMigrate = true;
+    
+    # Allow mutable taps during migration to prevent conflicts with existing taps
+    mutableTaps = true;
+    
+    # Optional: use declarative taps
+    taps = {
+      "homebrew/homebrew-core" = inputs.homebrew-core;
+      "homebrew/homebrew-cask" = inputs.homebrew-cask;
+      "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
+    };
+  };
+
+  # nix-darwin homebrew configuration (still used for declarative package management)
   homebrew.onActivation = {
     cleanup = "uninstall";
     upgrade = true;
+    autoUpdate = true;
   };
   homebrew.global.brewfile = true;
 
