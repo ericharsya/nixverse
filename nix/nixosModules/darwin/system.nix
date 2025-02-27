@@ -2,7 +2,7 @@
 {
   # Auto upgrade nix package and the daemon service.
   # services.nix-daemon.enable = true;
-  security.pam.enableSudoTouchIdAuth = false;
+  security.pam.services.sudo_local.touchIdAuth = false;
   # dock
   system.defaults.dock.autohide = true;
   system.defaults.dock.mru-spaces = false;

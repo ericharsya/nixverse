@@ -25,7 +25,10 @@ in
       '';
 
   homebrew.enable = true;
-  homebrew.onActivation.cleanup = "zap";
+  homebrew.onActivation = {
+    cleanup = "uninstall";
+    upgrade = true;
+  };
   homebrew.global.brewfile = true;
 
   homebrew.taps = [
@@ -86,9 +89,7 @@ in
     "logi-options+"
     "brave-browser"
     "obs"
-    # "notion"
-    # "obsidian"
-    "siyuan"
+    "obsidian"
     "discord"
     "mendeley-reference-manager"
 
