@@ -14,6 +14,9 @@
     ./fish.nix
     ./starship.nix
     
+    # Git configuration
+    ./git.nix
+    
     # GUI apps - only included if not running in WSL
     (lib.mkIf (!config.wsl.enable or false) ./apps.nix)
   ];

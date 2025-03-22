@@ -136,6 +136,9 @@
         set -x BROWSER wsl-open
       end
       
+      # Set GPG_TTY for proper GPG signing in WSL
+      set -gx GPG_TTY (tty)
+      
       # Add additional directories to PATH
       fish_add_path $HOME/.local/bin
       
