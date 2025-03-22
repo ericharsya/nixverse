@@ -6,6 +6,7 @@
 }:
 
 {
+  # Enable Fish at the system level
   programs.fish = {
     enable = true;
     
@@ -119,7 +120,16 @@
       code = "code-insiders";
     };
     
+    # Add shell init for proper PATH setting in WSL with Fish
     shellInit = ''
+      # Fix PATH for WSL with Fish
+      if status is-login
+        set -gx PATH /run/wrappers/bin $PATH
+        set -gx PATH /run/current-system/sw/bin $PATH
+        set -gx PATH /nix/var/nix/profiles/default/bin $PATH
+        set -gx PATH $HOME/.nix-profile/bin $PATH
+      end
+      
       # Fix for WSL interop
       if test -d /mnt/c
         # WSL-specific settings
@@ -133,6 +143,10 @@
       if type -q starship
         starship init fish | source
       end
+      
+      # Initialize completions
+      test -d ~/.config/fish/completions; and set -p fish_complete_path ~/.config/fish/completions
+      test -d /run/current-system/sw/share/fish/vendor_completions.d; and set -p fish_complete_path /run/current-system/sw/share/fish/vendor_completions.d
     '';
     
     interactiveShellInit = ''
@@ -147,6 +161,13 @@
       
       # Enable vi key bindings
       set -U fish_key_bindings fish_vi_key_bindings
+      
+      # Enable autocompletion
+      for prefix in "$__fish_data_dir/completions" "$__fish_sysconf_dir/completions" "$__fish_user_data_dir/completions"
+          if test -d $prefix
+              set -p fish_complete_path $prefix
+          end
+      end
       
       # Integration with direnv
       if type -q direnv

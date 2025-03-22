@@ -53,13 +53,6 @@
               GIT_AUTHOR_EMAIL = "ericsson@budhilaw.com";
               NIX_CONFIG_DIR = "/home/budhilaw/.config/nixverse";
             };
-            
-            # Additional packages not covered by Linux packages module
-            packages = with pkgs; [
-              # WSL-specific packages can be added here
-              wsl-open # Open files in Windows apps
-              wsl-sudo # Better sudo for WSL
-            ];
           };
           
           # Basic programs without complex configurations

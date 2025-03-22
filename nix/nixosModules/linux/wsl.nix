@@ -18,6 +18,7 @@
   wsl = {
     enable = true;
     defaultUser = "budhilaw";
+    defaultShell = "${pkgs.fish}/bin/fish";
     nativeSystemd = true;
     startMenuLaunchers = true;
     # WSL-specific settings
@@ -45,13 +46,25 @@
   };
   
   # WSL specific programs and configurations
+  # Must enable fish at the system level for proper PATH
   programs = {
-    fish.enable = true;
+    fish = {
+      enable = true;
+      # Ensure Fish is properly set up for WSL
+      useBabelfish = false;  # Don't use babelfish for WSL
+      vendor.completions.enable = true;
+      vendor.config.enable = true;
+      vendor.functions.enable = true;
+    };
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;
     };
   };
+  
+  # Add fish to /etc/shells and set as default shell for user
+  environment.shells = [ pkgs.fish ];
+  users.users.budhilaw.shell = pkgs.fish;
   
   # System environment packages specific for WSL
   environment.systemPackages = with pkgs; [

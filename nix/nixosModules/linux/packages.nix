@@ -46,7 +46,8 @@
     zoxide   # Better cd
     direnv   # Directory-specific envs
     du-dust  # Better du
-    exa      # Better ls
+    eza      # Better ls (replacement for the deprecated exa)
+    bash-completion   # Better completions for bash
     
     ################################## 
     # Misc
