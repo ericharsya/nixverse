@@ -150,6 +150,15 @@ nix run home-manager/master -- switch --flake .#budhilaw@ubuntu  # Ubuntu WSL
 
 Add new environments to `nix/devShells.nix`
 
+## 💫 Inspiration & Credits
+
+This project was inspired by and draws upon ideas from several amazing Nix configurations in the community:
+
+- [**r17x/universe**](https://github.com/r17x/universe) - A comprehensive Nix configuration with excellent structure and development environments
+- [**malob/nixpkgs**](https://github.com/malob/nixpkgs) - Well-designed Darwin configuration with practical abstractions
+
+Special thanks to the Nix community for sharing knowledge and configurations that make projects like this possible.
+
 ## 📄 License
 
 This project is licensed under the MIT License. See the LICENSE file for more details. 
