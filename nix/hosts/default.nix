@@ -82,7 +82,65 @@ let
       }
     );
 
+  mkNixOS =
+    name:
+    {
+      system ? "x86_64-linux",
+      user ? self.users.default,
+      stateVersion ? "24.11",
+      homeManagerStateVersion ? "24.11",
+      modules ? [ ],
+    }:
+    withSystem system (
+      ctx:
+      inputs.nixpkgs.lib.nixosSystem {
+        inherit (ctx) system;
+        specialArgs = {
+          inherit inputs;
+        };
+        modules =
+          attrValues self.commonModules
+          ++ [
+            # Composed home-manager configuration
+            inputs.home-manager.nixosModules.home-manager
+            (
+              { pkgs, config, ... }:
+              {
+                inherit (ctx) nix;
+                _module.args = ctx.extraModuleArgs;
+                nixpkgs = removeAttrs ctx.nixpkgs [ "hostPlatform" ];
+                system.stateVersion = stateVersion;
+                users.primaryUser = user;
+                networking.hostName = name;
+                environment.systemPackages = ctx.basePackagesFor pkgs;
+                # home-manager config
+                users.users.${user.username} = {
+                  isNormalUser = true;
+                  home = "/home/${user.username}";
+                  shell = pkgs.fish;
+                  extraGroups = [ "wheel" "networkmanager" "video" ];
+                };
+                home-manager.useGlobalPkgs = true;
+                home-manager.useUserPackages = true;
+                home-manager.users.${user.username} = {
+                  imports = attrValues self.homeManagerModules;
+                  home.enableNixpkgsReleaseCheck = false;
+                  home.stateVersion = homeManagerStateVersion;
+                  home.user-info = user;
+                  home.username = user.username;
+                  home.packages = [
+                    config.nix.package
+                  ];
+                };
+              }
+            )
+          ]
+          ++ modules;
+      }
+    );
+
   mkDarwinConfigurations = configurations: builtins.mapAttrs mkDarwin configurations;
+  mkNixOSConfigurations = configurations: builtins.mapAttrs mkNixOS configurations;
 in
 
 {
@@ -102,5 +160,24 @@ in
   # nix-darwin configurations
   flake.darwinConfigurations = mkDarwinConfigurations {
     budhilaw = { };
+  };
+  # NixOS configurations
+  flake.nixosConfigurations = mkNixOSConfigurations {
+    wsl = {
+      modules = [
+        # Import the WSL module we created
+        self.nixosModules.system-wsl
+        (
+          { pkgs, ... }:
+          {
+            # User configuration specifically for Linux/WSL environment
+            users.users.budhilaw = {
+              nixConfigDirectory = "/home/budhilaw/.config/nixverse";
+              home = "/home/budhilaw";
+            };
+          }
+        )
+      ];
+    };
   };
 }

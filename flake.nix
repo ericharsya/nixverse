@@ -42,6 +42,12 @@
     #### ---- Home
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    
+    #### ---- WSL
+    nixos-wsl = {
+      url = "github:nix-community/NixOS-WSL";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     ## -- nix-homebrew
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";
