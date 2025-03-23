@@ -23,7 +23,8 @@ in
     devenv.flake = inputs.devenv;
   };
 
-  optimise.automatic = true;
+  # optimise.automatic = true;
+  enable = false;
 
   settings =
     {
@@ -67,10 +68,10 @@ in
     });
 
   # enable garbage-collection on weekly and delete-older-than 30 day
-  gc = {
-    automatic = true;
-    options = "--delete-older-than 30d";
-  };
+  # gc = {
+  #   automatic = true;
+  #  options = "--delete-older-than 30d";
+  # };
 
   # this is configuration for /etc/nix/nix.conf
   # so it will generated /etc/nix/nix.conf

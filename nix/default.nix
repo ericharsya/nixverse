@@ -33,6 +33,7 @@
             }
             // {
               package = pkgs.nix;
+	      # enable = false;
             };
 
           pkgs = import inputs.nixpkgs {

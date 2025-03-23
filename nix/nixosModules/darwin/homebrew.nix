@@ -32,6 +32,9 @@ in
 
   # Enable both homebrew and nix-homebrew
   homebrew.enable = true;
+
+  homebrew.taps = builtins.attrNames config.nix-homebrew.taps;
+
   nix-homebrew = {
     enable = true;
     user = "budhilaw"; # your username
@@ -47,9 +50,9 @@ in
     
     # Optional: use declarative taps
     taps = {
-      "homebrew/homebrew-core" = inputs.homebrew-core;
-      "homebrew/homebrew-cask" = inputs.homebrew-cask;
-      "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
+       "homebrew/homebrew-core" = inputs.homebrew-core;
+       "homebrew/homebrew-cask" = inputs.homebrew-cask;
+       "homebrew/homebrew-bundle" = inputs.homebrew-bundle;
     };
   };
 
@@ -60,11 +63,6 @@ in
     autoUpdate = true;
   };
   homebrew.global.brewfile = true;
-
-  homebrew.taps = [
-    "homebrew/services"
-    "gromgit/homebrew-fuse"
-  ];
 
   homebrew.masApps = {
     Slack = 803453959;
@@ -122,12 +120,15 @@ in
     "obsidian"
     "discord"
     "mendeley-reference-manager"
+    "skype"
 
     ##############
     # Misc
     ##############
     "1password"
     "1password-cli"
+    "android-file-transfer"
+    "moonlight"
     
     "cloudflare-warp"
     "iina"
@@ -138,6 +139,7 @@ in
     # Productivity
     ##############
     "terminal-notifier"
+    "git"
   ];
 
 }

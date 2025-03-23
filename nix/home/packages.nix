@@ -79,7 +79,6 @@ in
       openssl
       ffmpeg
       telegram
-      git
 
       ################################## 
       # Useful Nix related tools
