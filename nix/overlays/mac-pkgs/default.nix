@@ -10,6 +10,7 @@
         "orbstack"
         "telegram"
         "shottr"
+        "dbeaver-community"
       ];
     in
 
