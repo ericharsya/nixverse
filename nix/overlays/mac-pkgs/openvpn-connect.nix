@@ -1,11 +1,17 @@
-{ lib, stdenv, fetchurl, undmg }:
+{
+  lib,
+  stdenv,
+  fetchurl,
+  xar,
+  cpio,
+  makeWrapper,
+}:
 
 let
   pname = "openvpn-connect";
   version = "3.7.0";
   build = "5510";
-  fullVersion = "${version},${build}";
-
+  
   underscoreVersion = builtins.replaceStrings ["."] ["_"] version;
   archType = if stdenv.hostPlatform.system == "aarch64-darwin" then "arm64" else "x86_64";
   
@@ -20,24 +26,34 @@ in
 stdenv.mkDerivation {
   inherit pname version src;
   
-  nativeBuildInputs = [ undmg ];
+  nativeBuildInputs = [ xar cpio makeWrapper ];
   
   sourceRoot = ".";
   
+  unpackPhase = ''
+    # Extract the dmg first
+    mkdir dmg
+    cd dmg
+    cp $src ./openvpn-connect.dmg
+    $SHELL -c "dd if=openvpn-connect.dmg bs=1 skip=82 | hdiutil attach -nobrowse -noautoopen -mountpoint ./mnt -"
+    
+    # Extract the pkg contents
+    cd mnt
+    xar -xf "${installerName}"
+    zcat < OpenVPN_Connect.pkg/Payload | cpio -i
+  '';
+  
   installPhase = ''
+    runHook preInstall
+    
     mkdir -p $out/Applications
+    cp -R ./Applications/OpenVPN\ Connect.app $out/Applications/
     
-    # Create a directory to store the installer
-    mkdir -p $out/share/openvpn-connect
-    cp "${installerName}" $out/share/openvpn-connect/
-    
-    # Create a script to run the installer
     mkdir -p $out/bin
-    cat > $out/bin/openvpn-connect-installer <<EOF
-    #!/bin/sh
-    open $out/share/openvpn-connect/${installerName}
-    EOF
-    chmod +x $out/bin/openvpn-connect-installer
+    makeWrapper "$out/Applications/OpenVPN Connect.app/Contents/MacOS/OpenVPN Connect" \
+      $out/bin/openvpn-connect
+    
+    runHook postInstall
   '';
   
   meta = with lib; {

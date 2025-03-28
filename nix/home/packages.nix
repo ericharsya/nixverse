@@ -46,6 +46,7 @@ in
       eza
       fastfetch
       zoom-us
+      openvpn-connect
 
       ################################## 
       # Development
