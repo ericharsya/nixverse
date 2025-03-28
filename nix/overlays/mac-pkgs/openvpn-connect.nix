@@ -1,67 +1,41 @@
-{
-  lib,
-  stdenv,
-  fetchurl,
-  xar,
-  cpio,
-  makeWrapper,
-}:
+{ lib, stdenv, fetchurl, undmg }:
 
 let
   pname = "openvpn-connect";
-  version = "3.7.0";
-  build = "5510";
+  version = "3.7.0,5510";
   
-  underscoreVersion = builtins.replaceStrings ["."] ["_"] version;
-  archType = if stdenv.hostPlatform.system == "aarch64-darwin" then "arm64" else "x86_64";
-  
-  src = fetchurl {
-    url = "https://swupdate.openvpn.net/downloads/connect/openvpn-connect-${version}.${build}_signed.dmg";
-    sha256 = "afd99e6474558c11077c18e513f5338b2dfea7f62eda9031d43518648289fb4f";
+  sources = {
+    aarch64-darwin = fetchurl {
+      url = "https://swupdate.openvpn.net/downloads/connect/openvpn-connect-3.7.0.5510_signed.dmg";
+      sha256 = "afd99e6474558c11077c18e513f5338b2dfea7f62eda9031d43518648289fb4f";
+    };
+    x86_64-darwin = fetchurl {
+      url = "https://swupdate.openvpn.net/downloads/connect/openvpn-connect-3.7.0.5510_signed.dmg";
+      sha256 = "afd99e6474558c11077c18e513f5338b2dfea7f62eda9031d43518648289fb4f";
+    };
   };
-  
-  installerName = "OpenVPN_Connect_${underscoreVersion}(${build})_${archType}_Installer_signed.pkg";
 in
 
 stdenv.mkDerivation {
-  inherit pname version src;
+  inherit pname version;
   
-  nativeBuildInputs = [ xar cpio makeWrapper ];
+  src = sources.${stdenv.hostPlatform.system} or (throw "Unsupported system: ${stdenv.hostPlatform.system}");
+  
+  nativeBuildInputs = [ undmg ];
   
   sourceRoot = ".";
   
-  unpackPhase = ''
-    # Extract the dmg first
-    mkdir dmg
-    cd dmg
-    cp $src ./openvpn-connect.dmg
-    $SHELL -c "dd if=openvpn-connect.dmg bs=1 skip=82 | hdiutil attach -nobrowse -noautoopen -mountpoint ./mnt -"
-    
-    # Extract the pkg contents
-    cd mnt
-    xar -xf "${installerName}"
-    zcat < OpenVPN_Connect.pkg/Payload | cpio -i
-  '';
-  
   installPhase = ''
-    runHook preInstall
-    
-    mkdir -p $out/Applications
-    cp -R ./Applications/OpenVPN\ Connect.app $out/Applications/
-    
-    mkdir -p $out/bin
-    makeWrapper "$out/Applications/OpenVPN Connect.app/Contents/MacOS/OpenVPN Connect" \
-      $out/bin/openvpn-connect
-    
-    runHook postInstall
+    mkdir -p "$out/Applications"
+    cp -r "OpenVPN Connect.app" "$out/Applications/"
   '';
   
   meta = with lib; {
     description = "Client program for the OpenVPN Access Server";
     homepage = "https://openvpn.net/client-connect-vpn-for-mac-os/";
-    license = licenses.unfree;
+    sourceProvenance = [ sourceTypes.binaryNativeCode ];
     platforms = [ "aarch64-darwin" "x86_64-darwin" ];
     maintainers = with maintainers; [ ];
-    sourceProvenance = [ sourceTypes.binaryNativeCode ];
+    mainProgram = "openvpn-connect";
   };
 } 
