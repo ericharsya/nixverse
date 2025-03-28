@@ -13,7 +13,7 @@
         "dbeaver-community"
         "cursor"
         "jetbrains-toolbox"
-        "pritunl"
+        "openvpn-connect"
       ];
     in
 
