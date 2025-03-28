@@ -104,7 +104,6 @@ in
     ##############
     # Tech
     ##############
-    "cursor"
     "jetbrains-toolbox"
     "pritunl"
     "orbstack"
@@ -128,7 +127,6 @@ in
     "1password-cli"
     "android-file-transfer"
     "moonlight"
-    
     "cloudflare-warp"
     "iina"
   ];

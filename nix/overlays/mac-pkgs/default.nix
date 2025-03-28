@@ -12,6 +12,7 @@
         "shottr"
         "dbeaver-community"
         "cursor"
+        "jetbrains-toolbox"
       ];
     in
 

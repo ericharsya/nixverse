@@ -55,6 +55,9 @@ in
       kubectl
       (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
       postman
+      cursor
+      dbeaver-community
+      jetbrains-toolbox
 
       ################################## 
       # Programming Stuff
@@ -64,7 +67,6 @@ in
       docker
       cloudflared
       mkcert
-      dbeaver-community
 
       ################################## 
       # Shell Integrations
