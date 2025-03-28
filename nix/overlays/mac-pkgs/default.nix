@@ -13,6 +13,7 @@
         "dbeaver-community"
         "cursor"
         "jetbrains-toolbox"
+        "pritunl"
       ];
     in
 

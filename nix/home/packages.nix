@@ -82,6 +82,7 @@ in
       openssl
       ffmpeg
       telegram
+      pritunl
 
       ################################## 
       # Useful Nix related tools

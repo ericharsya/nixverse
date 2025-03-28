@@ -104,8 +104,6 @@ in
     ##############
     # Tech
     ##############
-    "jetbrains-toolbox"
-    "pritunl"
     "orbstack"
     "mongodb-compass"
 
