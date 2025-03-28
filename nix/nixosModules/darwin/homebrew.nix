@@ -108,7 +108,6 @@ in
     "jetbrains-toolbox"
     "pritunl"
     "orbstack"
-    "dbeaver-community"
     "mongodb-compass"
 
     ##############

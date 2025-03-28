@@ -11,6 +11,7 @@
         "telegram"
         "shottr"
         "dbeaver-community"
+        "cursor"
       ];
     in
 

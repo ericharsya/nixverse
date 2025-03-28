@@ -64,6 +64,7 @@ in
       docker
       cloudflared
       mkcert
+      dbeaver-community
 
       ################################## 
       # Shell Integrations
