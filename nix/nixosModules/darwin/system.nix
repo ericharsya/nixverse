@@ -22,10 +22,20 @@
   system.keyboard.enableKeyMapping = true;
   # system.keyboard.remapCapsLockToEscape = true;
 
-  networking.knownNetworkServices = [
-    "Wi-Fi"
-    "USB 10/100/1000 LAN"
-  ];
+  services = {
+    dnscrypt-proxy.enable = true;
+    # when unbound `false` need to change dnscrypt listen address:
+    # dnscrypt-proxy.settings.listen_adresses = [ "127.0.0.1:53" ]
+    unbound.enable = true;
+  };
+
+  networking = {
+    hostName = "budhilaw";
+    knownNetworkServices = [
+      "Wi-Fi"
+      "USB 10/100/1000 LAN"
+    ];
+  };
 
   # Set DNS to use dnscrypt
   networking.dns = [

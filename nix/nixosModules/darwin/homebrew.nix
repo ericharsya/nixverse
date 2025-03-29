@@ -127,6 +127,7 @@ in
     "moonlight"
     "cloudflare-warp"
     "iina"
+    "openvpn-connect"
   ];
 
   homebrew.brews = [

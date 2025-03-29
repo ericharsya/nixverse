@@ -1,31 +1,73 @@
 {
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+  services.dnscrypt-proxy = {
+    overrideLocalDns = true;
+    settings = {
+      listen_addresses = [ "127.0.0.1:53000" ];
+      doh_servers = true;
+      dnscrypt_servers = true;
+      server_names = [
+        "adguard-dns"
+        "adguard-dns-doh"
+        "cloudflare"
+        "cloudflare-security"
+        "cloudflare-ipv6"
+        "cloudflare-security-ipv6"
+      ];
+      sources.public-resolvers = {
+        cache_file = "public-resolvers.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+        refresh_delay = 72;
+        prefix = "";
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+          "https://ipv6.download.dnscrypt.info/resolvers-list/v3/public-resolvers.md"
+        ];
+      };
+      sources.relays = {
+        urls = [
+          "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/relays.md"
+          "https://download.dnscrypt.info/resolvers-list/v3/relays.md"
+          "https://ipv6.download.dnscrypt.info/resolvers-list/v3/relays.md"
+        ];
+        cache_file = "relays.md";
+        minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+        refresh_delay = 72;
+        prefix = "";
+      };
+    };
+  };
 
-{
-  environment.systemPackages = with pkgs; [
-    dnscrypt-proxy2
-  ];
+  services.unbound.settings = {
+    server = {
+      username = ''""'';
+      verbosity = 3;
+      interface = "127.0.0.1";
+      port = 53;
+      do-ip4 = "yes";
+      do-ip6 = "no";
+      do-udp = "yes";
+      do-tcp = "yes";
+      do-not-query-localhost = "no";
+      access-control = "127.0.0.0/8 allow";
+      cache-min-ttl = 3600;
+      cache-max-ttl = 86400;
+      msg-cache-size = "50m";
+      rrset-cache-size = "100m";
+      prefetch = "yes";
+      hide-identity = "yes";
+      hide-version = "yes";
+      use-syslog = "yes";
+      log-queries = "yes";
+      log-replies = "yes";
+    };
 
-
-  # dnscrypt-proxy
-  launchd.daemons.dnscrypt-proxy = {
-    path = [ config.environment.systemPath ];
-    serviceConfig.RunAtLoad = true;
-    serviceConfig.KeepAlive = true;
-    serviceConfig.StandardOutPath = "/tmp/launchd-dnscrypt.log";
-    serviceConfig.StandardErrorPath = "/tmp/launchd-dnscrypt.error";
-    serviceConfig.ProgramArguments = [
-      "${pkgs.dnscrypt-proxy2}/bin/dnscrypt-proxy"
-      "-config"
-      (lib.trivial.pipe ./dnscrypt-proxy.toml [
-        builtins.readFile
-        (pkgs.writeText "dnscrypt-proxy.toml")
-        toString
-      ])
-    ];
+    forward-zone = {
+      name = ''"."'';
+      forward-first = "yes";
+      forward-addr = [
+        "127.0.0.1@53000"
+      ];
+    };
   };
 }

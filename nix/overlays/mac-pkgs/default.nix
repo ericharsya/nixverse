@@ -13,7 +13,6 @@
         "dbeaver-community"
         "cursor"
         "jetbrains-toolbox"
-        "openvpn-connect"
       ];
     in
 
