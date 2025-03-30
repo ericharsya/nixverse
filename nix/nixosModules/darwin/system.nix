@@ -23,10 +23,10 @@
   # system.keyboard.remapCapsLockToEscape = true;
 
   services = {
-    dnscrypt-proxy.enable = true;
+    # dnscrypt-proxy.enable = true;
     # when unbound `false` need to change dnscrypt listen address:
     # dnscrypt-proxy.settings.listen_adresses = [ "127.0.0.1:53" ]
-    unbound.enable = true;
+    # unbound.enable = true;
   };
 
   networking = {

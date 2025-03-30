@@ -22,6 +22,9 @@
 
     # utilities for Flake
     flake-parts.url = "github:hercules-ci/flake-parts";
+    ez-configs.url = "github:ehllie/ez-configs";
+    ez-configs.inputs.nixpkgs.follows = "nixpkgs";
+    ez-configs.inputs.flake-parts.follows = "flake-parts";
 
     ## -- nixpkgs 
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
@@ -48,6 +51,9 @@
       url = "github:nix-community/NixOS-WSL";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ## -- mac-app-util for Mac app launcher integration
+    mac-app-util.url = "github:hraban/mac-app-util";
 
     ## -- nix-homebrew
     nix-homebrew.url = "github:zhaofengli/nix-homebrew";

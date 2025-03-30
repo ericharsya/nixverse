@@ -28,6 +28,9 @@ let
           attrValues self.commonModules
           ++ attrValues self.darwinModules
           ++ [
+            # Mac App Util for fixing Mac app launchers
+            inputs.mac-app-util.darwinModules.default
+            
             # Composed home-manager configuration.
             inputs.home-manager.darwinModules.home-manager
             (
@@ -51,6 +54,8 @@ let
                 home-manager.useUserPackages = true;
                 home-manager.users.${user.username} = {
                   imports = attrValues self.homeManagerModules ++ [
+                    # Add mac-app-util home-manager module for the user
+                    inputs.mac-app-util.homeManagerModules.default
                     # inputs.sops.homeManagerModules.sops
                     # (
                     #   { ... }:

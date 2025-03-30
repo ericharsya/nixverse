@@ -9,7 +9,8 @@
     system-darwin = import ./darwin/system.nix;
     system-darwin-gpg = import ./darwin/gpg.nix;
     system-darwin-homebrew = import ./darwin/homebrew.nix;
-    system-darwin-network = import ./darwin/network.nix;
+    # system-darwin-network = import ./darwin/network.nix;
+    system-darwin-mac-app-util = import ./darwin/mac-app-util.nix;
   };
   
   flake.nixosModules = {
