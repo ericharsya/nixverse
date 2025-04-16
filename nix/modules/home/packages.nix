@@ -86,6 +86,7 @@
       slack
       zoom-us
       telegram
+      whatsapp
 
       ##################################
       # Useful Nix related tools

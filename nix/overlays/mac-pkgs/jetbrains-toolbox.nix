@@ -2,7 +2,7 @@
 
 let
   pname = "jetbrains-toolbox";
-  version = "2.5.4";
+  version = "2.6";
   build = "2.5.4.38621";
   
   sources = {

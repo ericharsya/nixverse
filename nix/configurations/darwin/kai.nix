@@ -18,6 +18,8 @@
     shell = pkgs.fish;
   };
 
+  users.users._dnscrypt-proxy.home = lib.mkForce "/private/var/lib/dnscrypt-proxy";
+
   # --- see: nix/nixosModules/nix.nix
   # --- disabled because i use determinate nix installer
   # nix-settings = {
@@ -34,11 +36,11 @@
   networking = {
     hostName = lib.mkDefault "kai";
     computerName = config.networking.hostName;
+    knownNetworkServices = ["Wi-Fi" "Ethernet" "USB 10/100/1000 LAN"];
   };
 
   services = {
     dnscrypt-proxy.enable = true;
-    # when unbound `false` need to change dnscrypt listen address:
-    dnscrypt-proxy.settings.listen_adresses = [ "127.0.0.1:53" ];
+    dnscrypt-proxy.settings.listen_addresses = [ "127.0.0.1:5353" ];
   };
 }
