@@ -6,6 +6,7 @@
     inputs.flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [
         "aarch64-darwin"
+        "aarch64-linux"
         "x86_64-linux"
       ];
 
@@ -17,14 +18,15 @@
     };
 
   inputs = {
-    nix.url = "github:nixos/nix";
-    nix.inputs.nixpkgs.follows = "nixpkgs";
-
     # utilities for Flake
     flake-parts.url = "github:hercules-ci/flake-parts";
     ez-configs.url = "github:ehllie/ez-configs";
     ez-configs.inputs.nixpkgs.follows = "nixpkgs";
     ez-configs.inputs.flake-parts.follows = "flake-parts";
+
+    ### -- nix related tools
+    process-compose-flake.url = "github:Platonic-Systems/process-compose-flake";
+    services-flake.url = "github:juspay/services-flake";
 
     ## -- nixpkgs 
     nixpkgs-master.url = "github:NixOS/nixpkgs/master";
@@ -35,45 +37,16 @@
     ## -- Platform
 
     #### ---- MacOS
-    # nix-darwin.url = "github:LnL7/nix-darwin";
-    nix-darwin = {
-      url = "github:LnL7/nix-darwin";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    # nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
+    nix-darwin.url = "github:LnL7/nix-darwin";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     #### ---- Home
     home-manager.url = "github:nix-community/home-manager/master";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
     
-    #### ---- WSL
-    nixos-wsl = {
-      url = "github:nix-community/NixOS-WSL";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    ## -- mac-app-util for Mac app launcher integration
-    mac-app-util.url = "github:hraban/mac-app-util";
-
-    ## -- nix-homebrew
-    nix-homebrew.url = "github:zhaofengli/nix-homebrew";
-    
-    # Homebrew taps (optional, for declarative management)
-    homebrew-core = {
-      url = "github:homebrew/homebrew-core";
-      flake = false;
-    };
-    homebrew-cask = {
-      url = "github:homebrew/homebrew-cask";
-      flake = false;
-    };
-    homebrew-bundle = {
-      url = "github:homebrew/homebrew-bundle";
-      flake = false;
-    };
-
-    iamb.url = "github:ulyssa/iamb";
-    iamb.inputs.nixpkgs.follows = "nixpkgs";
+    # secret management
+    sops-nix.url = "github:Mic92/sops-nix";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
 
     # utilities
     pre-commit-hooks.url = "github:cachix/pre-commit-hooks.nix";

@@ -1,18 +1,75 @@
-{ self, inputs, ... }:
+{
+  lib,
+  inputs,
+  ...
+}:
 
 {
+
   imports = [
-    ./nixosModules
-    ./hosts
-    ./home
+    inputs.process-compose-flake.flakeModule
+    inputs.ez-configs.flakeModule
 
     ./devShells.nix
     ./overlays
+
+    ./modules/flake/module-config.nix
+    {
+      modulesGen.flakeModules.dir = ./modules/flake;
+      modulesGen.crossModules.dir = ./modules/cross;
+    }
+
+    ./modules/flake/rebuild-script.nix
+    {
+      rebuild-scripts.enable = true;
+    }
   ];
+
+  flake = {
+    users.kai = rec {
+      username = "kai";
+      gh.url = "https://github.com/budhilaw";
+      keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDlZ2nm/I+pgwdJGpFzlN4HcQ19VCidrHx5QypgZVehe ericsson@budhilaw.com"
+      ];
+    };
+
+    # --- shareable nixpkgs configurations
+    nixpkgs = {
+      config = {
+        allowBroken = true;
+        allowUnfree = true;
+        tarball-ttl = 0;
+        contentAddressedByDefault = false;
+      };
+
+      overlays = lib.attrValues inputs.self.overlays;
+    };
+  };
+
+  ezConfigs = {
+    root = ./.;
+    globalArgs = {
+      inherit (inputs) self;
+      inherit inputs;
+      inherit (inputs.self)
+        crossModules
+        ;
+    };
+
+    home.modulesDirectory = ./modules/home;
+    home.configurationsDirectory = ./configurations/home;
+
+    darwin.modulesDirectory = ./modules/darwin;
+    darwin.configurationsDirectory = ./configurations/darwin;
+    darwin.hosts = {
+      kai.userHomeModules = [ "kai" ];
+    };
+  };
 
   perSystem =
     {
-      lib,
+      pkgs,
       system,
       inputs',
       ...
@@ -20,87 +77,39 @@
     {
       formatter = inputs'.nixpkgs.legacyPackages.nixfmt-rfc-style;
 
-      _module.args =
-        let
-          overlays = [ ] ++ lib.attrValues self.overlays;
-        in
-        rec {
-          # the nix package manager configurations and settings.
-          nix =
-            import ./nix.nix {
-              inherit lib inputs inputs';
-              inherit (pkgs) stdenv;
-            }
-            // {
-              package = pkgs.nix;
-	      # enable = false;
-            };
+      # process-compose."ai" = {
+      #   imports = [
+      #     inputs.services-flake.processComposeModules.default
+      #   ];
+      #   services.ollama.ollamaX.enable = true;
+      #   services.ollama.ollamaX.dataDir = "$HOME/.process-compose/ai/data/ollamaX";
+      #   services.ollama.ollamaX.models = [
+      #     "qwen2.5-coder"
+      #     # "deepseek-r1:1.5b"
+      #   ];
+      # };
 
-          pkgs = import inputs.nixpkgs {
-            inherit system;
-            inherit (nixpkgs) config;
-            inherit overlays;
-          };
-
-          # nixpkgs (channel) configuration (not the flake input)
-          nixpkgs = {
-            config = lib.mkForce {
-              allowBroken = true;
-              allowUnfree = true;
-              tarball-ttl = 0;
-
-              # Experimental options, disable if you don't know what you are doing!
-              contentAddressedByDefault = false;
-            };
-
-            hostPlatform = system;
-
-            overlays = lib.mkForce overlays;
-          };
-
-          # Extra arguments passed to the module system for nix-darwin, NixOS, and home-manager
-          extraModuleArgs = {
-            inherit inputs' system;
-            inputs = lib.mkForce inputs;
-
-            /*
-              One can access these nixpkgs branches like so:
-
-              `branches.stable.mpd'
-              `branches.master.linuxPackages_xanmod'
-            */
-            branches =
-              let
-                pkgsFrom =
-                  branch: system:
-                  import branch {
-                    inherit system;
-                    inherit (nixpkgs) config;
-                  };
-              in
-              {
-                master = pkgsFrom inputs.nixpkgs-master system;
-                stable = pkgsFrom inputs.nixpkgs-stable system;
-                unstable = pkgsFrom inputs.nixpkgs-unstable system;
-              };
-          };
-
-          # NixOS and nix-darwin base environment.systemPackages
-          basePackagesFor =
-            pkgs:
-            builtins.attrValues {
-              inherit (pkgs)
-                vim
-                curl
-                fd
-                wget
-                git
-                ;
-
-              home-manager = inputs'.home-manager.packages.home-manager.override {
-                path = "${inputs.home-manager}";
-              };
-            };
+      # just for demo - https://x.com/dhh/status/1897982683772317776
+      process-compose."mysql" = {
+        imports = [
+          inputs.services-flake.processComposeModules.default
+        ];
+        services.mysql."m1" = {
+          enable = true;
+          package = pkgs.mariadb_114;
+          settings.mysqld.port = 3307;
         };
+      };
+
+      _module.args = {
+        inherit (inputs.self);
+        # extraModuleArgs = {
+        #   inherit (inputs.self);
+        # };
+        pkgs = import inputs.nixpkgs {
+          inherit system;
+          inherit (inputs.self.nixpkgs) config overlays;
+        };
+      };
     };
 }

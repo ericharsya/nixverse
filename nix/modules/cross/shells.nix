@@ -1,7 +1,6 @@
 { pkgs, config, ... }:
-{
-  # Shells -----------------------------------------------------------------------------------------
 
+{
   # Add shells installed by nix to /etc/shells file
   environment = with pkgs; {
     shells = [ fish ];

@@ -6,7 +6,7 @@
 }:
 
 let
-  inherit (config.home.user-info) nixConfigDirectory;
+  nixConfigDirectory = "~/.config/nixpkgs";
   # usefull when want to write bin bash
   # n = pkgs.writers.writeBash "n" ''
   #     while getopts p flag
@@ -91,7 +91,7 @@ let
       ## senv switch generation <number>
       ## denv delete generation <number>
       ## renv rollback to previous version number
-      ## param: <GENEREATION_NUMBER> 
+      ## param: <GENEREATION_NUMBER>
       ## run lenv before if you want to see <GENEREATION_NUMBER>
       lenv = "nix-env --list-generations";
       senv = "nix-env --switch-generation";
@@ -100,7 +100,7 @@ let
       renv = "nix-env --rollback";
       # is equivalent to: nix build --recreate-lock-file
       flakeup-all = "nix flake update ${nixConfigDirectory}";
-      # example: 
+      # example:
       # $ flakeup home-manager
       flakeup = "nix flake lock ${nixConfigDirectory} --update-input";
       nb = "nix build";
@@ -113,6 +113,7 @@ let
       age = "${pkgs.rage}/bin/rage";
 
       # Shell related
+      e = "nvim";
       grep = "${pkgs.ripgrep}/bin/rg";
       c = "z";
       cc = "zi";
@@ -144,6 +145,11 @@ let
       gfa = "git fetch --all";
       grc = "git rebase --continue";
       gri = "git rebase --interactive";
+
+      # Documentation
+      todo = "nvim ${nixConfigDirectory}/notes/todo.norg";
+      todox = "nvim ${nixConfigDirectory}/secrets/todo.norg";
+      diary = "nvim ${nixConfigDirectory}/notes/diary.norg";
     };
 in
 {
@@ -151,18 +157,19 @@ in
     inherit shellAliases;
     sessionPath = [ "$HOME/.yarn/bin" ];
     packages = [
+      pkgs.babelfish
       pkgs.fishPlugins.colored-man-pages
       # https://github.com/franciscolourenco/done
       pkgs.fishPlugins.done
       # use babelfish than foreign-env
-      pkgs.fishPlugins.foreign-env
+      # pkgs.fishPlugins.foreign-env
       # https://github.com/wfxr/forgit
-      pkgs.fishPlugins.forgit
+      # pkgs.fishPlugins.forgit
       # Paired symbols in the command line
-      pkgs.fishPlugins.pisces
-      pkgs.fishPlugins.puffer
-      pkgs.fishPlugins.fifc
-      pkgs.fishPlugins.bass
+      # pkgs.fishPlugins.pisces
+      # pkgs.fishPlugins.puffer
+      # pkgs.fishPlugins.fifc
+      # pkgs.fishPlugins.bass
     ];
   };
 
@@ -170,6 +177,20 @@ in
     # Shell history replacement
     # in MacOS type `Ctrl+R` to search history
     atuin.enable = true;
+    atuin.package = pkgs.atuin.overrideAttrs (d: rec {
+      version = "18.4.0";
+      src = pkgs.fetchFromGitHub {
+        owner = "atuinsh";
+        repo = "atuin";
+        rev = "v${version}";
+        hash = "sha256-P/q4XYhpXo9kwiltA0F+rQNSlqI+s8TSi5v5lFJWJ/4=";
+      };
+      cargoDeps = d.cargoDeps.overrideAttrs (_: {
+        name = "atuin-${version}-vendor.tar.gz";
+        inherit src;
+        outputHash = "sha256-mrsqaqJHMyNi3yFDIyAXFBS+LY71VWXE8O7mjvgI6lo=";
+      });
+    });
     atuin.enableFishIntegration = config.programs.fish.enable;
     atuin.enableBashIntegration = config.programs.bash.enable;
 
@@ -177,7 +198,7 @@ in
     nix-index.enableFishIntegration = config.programs.fish.enable;
     nix-index.enableBashIntegration = config.programs.bash.enable;
 
-    # jump like `z` or `fasd` 
+    # jump like `z` or `fasd`
     zoxide.enable = true;
     zoxide.enableFishIntegration = config.programs.fish.enable;
 
@@ -194,9 +215,9 @@ in
     fish = {
       enable = true;
 
-      # Fish plugins 
-      # See: 
-      # https://github.com/NixOS/nixpkgs/tree/90e20fc4559d57d33c302a6a1dce545b5b2a2a22/pkgs/shells/fish/plugins 
+      # Fish plugins
+      # See:
+      # https://github.com/NixOS/nixpkgs/tree/90e20fc4559d57d33c302a6a1dce545b5b2a2a22/pkgs/shells/fish/plugins
       # for list available plugins built-in nixpkgs
       plugins = with pkgs.fishPlugins; [ nix-env ];
 
@@ -222,33 +243,6 @@ in
         set -U fish_color_error EC7279 --bold
         set -U fish_color_param 6CB6EB
         set fish_greeting
-
-        # Golang
-        set -gx GOPATH $HOME/Dev/Tools/Go
-        fish_add_path $GOPATH/bin
-
-        # Rust
-        fish_add_path $HOME/.cargo/bin
-
-        # Jetbrains
-        fish_add_path /${if pkgs.stdenv.isDarwin then "Users" else "home"}/${config.home.username}/Library/Application\ Support/JetBrains/Toolbox/scripts
-
-        # brew bin
-        fish_add_path /opt/homebrew/bin
-
-        # orbstack
-        fish_add_path $HOME/.orbstack/bin
-
-        # gcloud
-        fish_add_path /${if pkgs.stdenv.isDarwin then "Users" else "home"}/${config.home.username}/Dev/Tech/google-cloud-sdk/bin
-
-        # Aliases
-        alias dev="cd $HOME/Dev/"
-        alias personaldev="cd $HOME/Dev/Personal"
-        alias paperdev="cd $HOME/Dev/Paper"
-        alias nixdir="cd ~/.config/nixpkgs"
-        alias di="devenv init"
-        alias ds="devenv shell -c $SHELL"
       '';
     };
 
@@ -280,10 +274,6 @@ in
             discharging_symbol = "💀 ";
           };
 
-          docker_context = {
-            disabled = true;
-          };
-
           bun.format = defaultProgramFormat;
           git_branch.format = withEndLineBreak "[$symbol$branch]($style)";
           git_status.format = withEndLineBreak "([$all_status$ahead_behind]($style))";
@@ -294,8 +284,10 @@ in
           nix_shell.impure_msg = "󰊰";
           nix_shell.pure_msg = "󱨧";
           nodejs.format = defaultProgramFormat;
+          ocaml.format = withEndLineBreak "[$symbol($version)(\($switch_indicator$switch_name\))]($style)";
           package.format = withEndLineBreak "[$symbol$version]($style)";
           rust.format = defaultProgramFormat;
+          zig.format = defaultProgramFormat;
         };
     };
   };

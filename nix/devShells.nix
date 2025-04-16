@@ -1,27 +1,40 @@
 ##################################################################
 #                       Development shells
 ##################################################################
-{ self, inputs, ... }:
+{ inputs, self, ... }:
 
 {
+  imports = [
+    inputs.pre-commit-hooks.flakeModule
+  ];
+
   perSystem =
-    { pkgs, config, ... }:
+    {
+      pkgs,
+      system,
+      config,
+      ...
+    }:
     {
       pre-commit.check.enable = true;
       pre-commit.devShell = self.devShells.default;
       pre-commit.settings.hooks = {
         actionlint.enable = true;
         shellcheck.enable = true;
+        stylua.enable = true;
+        luacheck.enable = false;
         deadnix.enable = true;
         deadnix.excludes = [ "nix/overlays/nodePackages/node2nix" ];
         nixfmt-rfc-style.enable = true;
+        dune-fmt.enable = true;
+        dune-fmt.settings.extraRuntimeInputs = [ pkgs.ocamlPackages.ocamlformat ];
+        dune-fmt.files = "apps/rin.rocks";
+        dune-fmt.entry = "dune build @fmt --root=apps/rin.rocks --auto-promote";
       };
 
       devShells =
         let
           inherit (pkgs) lib;
-          inherit (inputs) devenv;
-
           mutFirstChar =
             f: s:
             let
@@ -100,21 +113,104 @@
         #
         #    versions: 14, 18, 20, 22, Latest
         #
-        #    $ nix develop github:budhilaw/nixpkgs#<nodejsVERSION>
+        #    $ nix develop github:r17x/nixpkgs#<nodejsVERSION>
         #
         #
         mkShells "nodejs_"
         // mkShells "go_"
-        // {
+        // rec {
           default = pkgs.mkShell {
             shellHook = ''
               ${config.pre-commit.installationScript}
             '';
+            packages = [ inputs.clan-core.packages.${system}.clan-cli ];
           };
 
           #
           #
-          #    $ nix develop github:budhilaw/nixpkgs#go
+          #    $ nix develop github:r17x/nixpkgs#ocaml
+          #
+          #
+          ocaml = pkgs.mkShell {
+            description = "OCaml development environment";
+            buildInputs = with pkgs.ocamlPackages; [
+              dune
+              ocaml
+              opam
+              merlin
+            ];
+          };
+
+          #
+          #
+          #    $ nix develop github:r17x/nixpkgs#ocamlorg
+          #
+          #
+          ocamlorg =
+            let
+              ocamlPackages = pkgs.ocaml-ng.ocamlPackages_4_14;
+            in
+            pkgs.mkShell {
+              description = "OCaml.org development environment";
+              buildInputs = with ocamlPackages; [
+                ocaml
+                merlin
+              ];
+              nativeBuildInputs = with pkgs; [
+                opam
+                pkg-config
+                libev
+                oniguruma
+                openssl
+                gmp
+              ];
+            };
+
+          #
+          #
+          #    $ nix develop github:r17x/nixpkgs#melange
+          #
+          #
+          melange = pkgs.mkShell {
+            description = "Melange Development Environment with OCaml 5_2";
+            shellHook = config.pre-commit.installationScript;
+            nativeBuildInputs = with pkgs.ocamlPackages; [
+              ocaml
+              dune_3
+              findlib
+              ocaml-lsp
+              ocamlformat
+              reason
+              merlin
+              melange
+            ];
+            buildInputs = with pkgs.ocamlPackages; [
+              angstrom
+              dream
+              melange
+              melange-webapi
+              reason-react
+              reason-react-ppx
+              server-reason-react
+              atdgen
+              atdgen-runtime
+              yojson
+              lwt
+              lwt_ppx
+              cohttp
+              cohttp-lwt-unix
+              # TODO: styled-ppx fix build
+              # styled-ppx
+              pkgs.nodejs_20
+              (pkgs.nodeCorepackShims.overrideAttrs (_: {
+                buildInputs = [ pkgs.nodejs_20 ];
+              }))
+            ];
+          };
+
+          #
+          #
+          #    $ nix develop github:r17x/nixpkgs#go
           #
           #
           go = pkgs.mkShell {
@@ -142,8 +238,14 @@
               gcc
               rustfmt
               clippy
+              openssl
+              pkg-config
             ];
           };
+
+          rust-opencv = rust-wasm.overrideAttrs (old: {
+            nativeBuildInputs = (old.nativeBuildInputs or [ ]) ++ [ pkgs.opencv4 ];
+          });
 
           rust-cap = pkgs.mkShell {
             description = "Rust  Development Environment";
@@ -189,10 +291,11 @@
 
           #
           #
-          #    $ nix develop github:budhilaw/nixpkgs#bun
+          #    $ nix develop github:r17x/nixpkgs#bun
           #
           #
           bun = pkgs.mkShell { buildInputs = [ pkgs.bun ]; };
         };
+
     };
 }

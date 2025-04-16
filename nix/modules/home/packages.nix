@@ -1,8 +1,5 @@
-{ config, pkgs, ... }:
+{ pkgs, ... }:
 
-let
-  inherit (pkgs.stdenv) isDarwin;
-in
 {
   # Packages with configuration --------------------------------------------------------------- {{{
   programs.home-manager.enable = true;
@@ -15,7 +12,9 @@ in
   programs.bat.enable = true;
   programs.bat.config = {
     style = "plain";
+    theme = "TwoDark";
   };
+  # Direnv, load and unload environment variables depending on the current directory.
 
   # https://direnv.net
   # https://rycee.gitlab.io/home-manager/options.html#opt-programs.direnv.enable
@@ -31,10 +30,11 @@ in
     show_battery = false;
   };
 
-  home.packages = with pkgs;
+  home.packages =
+    with pkgs;
     [
       ################################## 
-      # Productivity
+      # Common
       ##################################
       lsd
       htop
@@ -45,7 +45,7 @@ in
       curl
       eza
       fastfetch
-      zoom-us
+      git
 
       ################################## 
       # Development
@@ -56,7 +56,6 @@ in
       (google-cloud-sdk.withExtraComponents [google-cloud-sdk.components.gke-gcloud-auth-plugin])
       postman
       cursor
-      dbeaver-community
       jetbrains-toolbox
 
       ################################## 
@@ -65,40 +64,62 @@ in
       go-mockery
       go-migrate
       docker
-      cloudflared
-      mkcert
 
-      ################################## 
-      # Shell Integrations
-      ################################## 
+      ##################################
+      # Productivity
+      ##################################
       starship # theme for shell (bash,fish,zsh)
       tmux
       iterm2
-
-      ################################## 
-      # Misc
-      ################################## 
       gnupg
       openssl
       ffmpeg
+      obsidian
+      obs-studio
+      brave-browser
+      microsoft-edge
+
+      ##################################
+      # Communication
+      ##################################
+      discord
+      slack
+      zoom-us
       telegram
 
-      ################################## 
+      ##################################
       # Useful Nix related tools
-      ################################## 
+      ##################################
       cachix
-    
-    ] ++ lib.optionals
-      stdenv.isDarwin
-      [
-        mas
-        m-cli # useful macOS CLI commands
-        xcode-install
-        rectangle
-        raycast
-        hidden-bar
-        appcleaner
-        shottr
-        pinentry_mac
-      ];
+      comma # run without install
+    ]
+    ++ lib.optionals stdenv.isDarwin [
+      mas
+      m-cli # useful macOS CLI commands
+      
+      ##################################
+      # Entertainment
+      ##################################
+      iina
+
+      ##################################
+      # Productivity
+      ##################################
+      rectangle
+      hidden-bar
+      shottr
+      pinentry_mac
+
+      ##################################
+      # Cleanup
+      ##################################
+      appcleaner
+
+      ##################################
+      # Developer Tools
+      ##################################
+      xcode-install
+      dbeaver-community
+      orbstack
+    ];
 }
