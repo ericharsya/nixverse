@@ -77,7 +77,7 @@
       obsidian
       obs-studio
       brave-browser
-      microsoft-edge
+      android-file-transfer
 
       ##################################
       # Communication
@@ -86,7 +86,6 @@
       slack
       zoom-us
       telegram
-      whatsapp
 
       ##################################
       # Useful Nix related tools

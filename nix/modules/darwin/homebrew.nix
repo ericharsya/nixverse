@@ -31,6 +31,7 @@ in
 
   homebrew.masApps = {
     Wireguard = 1451685025;
+    "WhatsApp" = 310633997;
   };
 
   homebrew.casks = [

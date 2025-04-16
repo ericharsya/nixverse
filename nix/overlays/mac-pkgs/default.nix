@@ -17,7 +17,6 @@
         "jetbrains-toolbox"
         "slack"
         "iterm2"
-        "whatsapp"
       ];
     in
 
