@@ -17,6 +17,7 @@
         "jetbrains-toolbox"
         "slack"
         "iterm2"
+        "cloudflare-warp"
       ];
     in
 
