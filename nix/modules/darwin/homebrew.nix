@@ -43,7 +43,7 @@ in
     "mist"
     "moonlight"
     "mounty"
-    # "cloudflare-warp"
+    "cloudflare-warp"
   ];
 
 }
