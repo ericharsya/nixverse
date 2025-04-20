@@ -78,7 +78,6 @@
       obs-studio
       brave-browser
       android-file-transfer
-      cloudflare-warp
 
       ##################################
       # Communication
