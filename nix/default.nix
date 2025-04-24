@@ -65,6 +65,13 @@
     darwin.hosts = {
       kai.userHomeModules = [ "kai" ];
     };
+    
+    # Add NixOS configuration
+    nixos.modulesDirectory = ./modules/nixos;
+    nixos.configurationsDirectory = ./configurations/nixos;
+    nixos.hosts = {
+      kai.userHomeModules = [ "kai" ];
+    };
   };
 
   perSystem =

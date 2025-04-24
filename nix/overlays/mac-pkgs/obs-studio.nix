@@ -14,14 +14,14 @@ let
 
   version =
     rec {
-      aarch64-darwin = "29.0.2";
+      aarch64-darwin = "31.0.3";
       x86_64-darwin = aarch64-darwin;
     }
     .${system} or throwSystem;
 
   sha256 =
     rec {
-      aarch64-darwin = "sha256-gJLdKUURT8AXwS0mcNl+elGKq0L0BfutJrwuInwaFWw=";
+      aarch64-darwin = "sha256-Kf4YcE61E048weSG3P0uPB5p3wa5GKIFKcLmfLnZWQ0=";
       x86_64-darwin = aarch64-darwin;
     }
     .${system} or throwSystem;
@@ -33,7 +33,7 @@ let
     rec {
       aarch64-darwin = {
         inherit sha256;
-        url = "${base}/obs-studio-${version}-macos-arm64.dmg";
+        url = "${base}/obs-studio-${version}-macos-apple.dmg";
       };
       x86_64-darwin = aarch64-darwin // {
         url = "${base}/obs-studio-${version}-macos-x86_64.dmg";

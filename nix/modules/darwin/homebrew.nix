@@ -29,9 +29,9 @@ in
   homebrew.onActivation.cleanup = "zap";
   homebrew.global.brewfile = true;
 
+  # Removed masApps as they keep reinstalling on every rebuild
   homebrew.masApps = {
-    Wireguard = 1451685025;
-    "WhatsApp" = 310633997;
+    "Passepartout" = 1433648537;
   };
 
   homebrew.casks = [
@@ -44,6 +44,7 @@ in
     "moonlight"
     "mounty"
     "cloudflare-warp"
+    "slack"
   ];
 
 }

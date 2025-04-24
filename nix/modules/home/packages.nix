@@ -83,7 +83,6 @@
       # Communication
       ##################################
       discord
-      slack
       zoom-us
       telegram
 
@@ -109,6 +108,7 @@
       hidden-bar
       shottr
       pinentry_mac
+      raycast
 
       ##################################
       # Cleanup

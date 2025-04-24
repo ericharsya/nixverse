@@ -11,7 +11,6 @@
 {
   # Apps
   environment.systemPackages = with pkgs.branches.master; [
-    raycast
     terminal-notifier
   ];
 
