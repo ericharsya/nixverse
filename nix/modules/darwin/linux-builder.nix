@@ -23,7 +23,7 @@ in
       "aarch64-linux"
     ];
     config = {
-      users.users.root.openssh.authorizedKeys.keys = self.users.kai.keys;
+      users.users.root.openssh.authorizedKeys.keys = self.users.budhilaw.keys;
       environment.systemPackages = with pkgs; [
         nixos-rebuild
       ];

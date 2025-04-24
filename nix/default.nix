@@ -26,8 +26,8 @@
   ];
 
   flake = {
-    users.kai = rec {
-      username = "kai";
+    users.budhilaw = rec {
+      username = "budhilaw";
       gh.url = "https://github.com/budhilaw";
       keys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDlZ2nm/I+pgwdJGpFzlN4HcQ19VCidrHx5QypgZVehe ericsson@budhilaw.com"
@@ -63,14 +63,14 @@
     darwin.modulesDirectory = ./modules/darwin;
     darwin.configurationsDirectory = ./configurations/darwin;
     darwin.hosts = {
-      kai.userHomeModules = [ "kai" ];
+      budhilaw.userHomeModules = [ "budhilaw" ];
     };
     
     # Add NixOS configuration
     nixos.modulesDirectory = ./modules/nixos;
     nixos.configurationsDirectory = ./configurations/nixos;
     nixos.hosts = {
-      kai.userHomeModules = [ "kai" ];
+      budhilaw.userHomeModules = [ "budhilaw" ];
     };
   };
 

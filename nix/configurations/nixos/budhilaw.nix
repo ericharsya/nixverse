@@ -11,15 +11,15 @@
   imports = lib.attrValues (ezModules // crossModules);
 
   # Set the system state version
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.11";
   
   # Set the platform to x86_64-linux
   nixpkgs.hostPlatform = "x86_64-linux";
 
   # User configuration
-  users.users.kai = {
+  users.users.budhilaw = {
     isNormalUser = true;
-    home = "/home/kai";
+    home = "/home/budhilaw";
     extraGroups = [ "wheel" "networkmanager" "docker" ];
     shell = pkgs.fish;
   };
@@ -33,7 +33,7 @@
 
   # Enable networking
   networking = {
-    hostName = lib.mkDefault "kai";
+    hostName = lib.mkDefault "budhilaw";
     networkmanager.enable = true;
   };
 

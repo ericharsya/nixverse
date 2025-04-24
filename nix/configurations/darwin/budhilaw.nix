@@ -13,8 +13,8 @@
   system.stateVersion = 4;
   nixpkgs.hostPlatform = "aarch64-darwin";
 
-  users.users.kai = {
-    home = "/Users/kai";
+  users.users.budhilaw = {
+    home = "/Users/budhilaw";
     shell = pkgs.fish;
   };
 
@@ -34,7 +34,7 @@
   homebrew.enable = true;
 
   networking = {
-    hostName = lib.mkDefault "kai";
+    hostName = lib.mkDefault "budhilaw";
     computerName = config.networking.hostName;
     knownNetworkServices = ["Wi-Fi" "Ethernet" "USB 10/100/1000 LAN"];
   };
